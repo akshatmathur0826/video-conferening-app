@@ -19,7 +19,7 @@ body{
     display: flex;
    /* flex-wrap: wrap;*/
     padding: 2%;
-    justify-content: left;
+    justify-content: flex-start;
     flex-basis: auto;
     flex-direction: row;
 
