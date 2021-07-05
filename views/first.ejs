@@ -1,0 +1,539 @@
+const myName = prompt("Please enter your name");
+
+
+
+const socket = io("/");
+const peer = new Peer(undefined, {
+   path: '/peerjs',
+   host: "/",
+   port: "3030",
+});
+
+const peers = {};
+const videoGrid = document.getElementById("video-grid");
+const videoText = document.createElement("div");
+const videoItem = document.createElement("div");
+videoItem.classList.add("video__item");
+videoText.classList.add("video__name");
+videoItem.append(videoText);
+
+const video = document.createElement("video");
+video.style.border='2px solid white';
+video.muted = true;
+
+let myVideoStream;
+peer.on("open", (id) => {
+  //if (loading) loading.remove();
+
+  socket.emit("join-room", ROOM_ID, { id, name: myName });
+
+  navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  }).then((stream) => {
+      //addClickListeners(stream);
+      myVideoStream=stream;
+      addVideoStream(video, stream, id, myName);
+
+      peer.on("call", (call) => {
+        call.answer(stream);
+
+        const video = document.createElement("video");
+        video.style.border='2px solid white';
+        call.on("stream", (userStream) => {
+          const userid = call.peer;
+          const userName = call.metadata.name;
+
+          log(`User connected - ID: ${userid}, Name: ${userName}`);
+          addVideoStream(video, userStream, userid, userName);
+        });
+      });
+
+     
+      socket.on('user-connected', ({ id, name }) => {
+        // user is joining
+        setTimeout(() => {
+        // user joined
+        $("ul").append(`<span class="messageHeader"><small>${name} has joined the meeting</small></span><br>`);
+        connectToNewUser({ id, name }, stream)
+        }, 1000)
+    })
+    })
+    var text1 = document.getElementById("chat_message");
+        console.log(text1.value)
+        const lists = document.getElementById("messages");
+        document.querySelector('html').addEventListener("keyup",function (e) {
+            if (e.keyCode === 13 && text1.value.length !== 0) {
+            socket.emit('message', text1.value);
+            console.log(text1.value)
+            text1.value="";
+            }
+        });
+        
+        socket.on('createMessage',({message,name})=>{
+           const container= document.querySelector(".main_chat_window");
+           const list = document.createElement("li");
+           list.innerHTML = `
+           ${name}
+           <div class="message__content">
+           <div class="message__text"><span>${message}<span></div>
+              `
+   
+       lists.append(list);
+       container.scrollTop = container.scrollHeight;
+        })
+   socket.on("user-disconnected", ({ id, name }) => {
+  log(`User disconnected - ID: ${id}, Name: ${name}`);
+  $("ul").append(`<span class="messageHeader"><small>${name} has left the meeting</small></span><br>`);
+  const video = document.getElementById(id);
+  if (video) {
+    video.parentElement.remove();
+  }
+
+  if (peers[id]) peers[id].close();
+});
+
+});
+
+
+
+function connectToNewUser({ id, name }, stream) {
+  const call = peer.call(id, stream, { metadata: { name: myName } });
+
+  const video = document.createElement("video");
+  video.style.border='2px solid white';
+  call.on("stream", (userStream) => {
+    addVideoStream(video, userStream, id, name);
+  });
+  call.on("close", () => {
+    video.remove();
+  });
+
+  peers[id] = call;
+}
+
+function addVideoStream(video, stream, id, name) {
+  video.srcObject = stream;
+  video.addEventListener("loadedmetadata", () => {
+    video.play();
+  });
+  video.setAttribute("id", id);
+
+  const clonedItem = videoItem.cloneNode(true);
+  clonedItem.children[0].innerHTML = name;
+  clonedItem.append(video);
+
+  videoGrid.append(clonedItem);
+
+  // weird error cleanup
+  const nodes = document.querySelectorAll(".video__item") || [];
+  nodes.forEach((node) => {
+    if (node.children && node.children.length < 2) {
+      node.remove();
+    }
+  });
+}
+
+/*function addClickListeners(stream) {
+  
+}
+*/
+function log(text) {
+  console.info(text);
+}
+
+const muteUnmute = () => {
+    const enabled = myVideoStream.getAudioTracks()[0].enabled;
+    if (enabled) {
+      myVideoStream.getAudioTracks()[0].enabled = false;
+      setUnmuteButton();
+    } else {
+      setMuteButton();
+      myVideoStream.getAudioTracks()[0].enabled = true;
+    }
+  }
+  
+  const playStop = () => {
+    console.log('object')
+    let enabled = myVideoStream.getVideoTracks()[0].enabled;
+    if (enabled) {
+      myVideoStream.getVideoTracks()[0].enabled = false;
+      setPlayVideo()
+    } else {
+      myVideoStream.getVideoTracks()[0].enabled = true;
+      setStopVideo()
+    }
+  }
+  
+  const setMuteButton = () => {
+    const html = `
+      <i class="fas fa-microphone"></i>
+      <span>Mute</span>
+    `
+    document.querySelector('.main__mute_button').innerHTML = html;
+  }
+  
+  const setUnmuteButton = () => {
+    const html = `
+      <i class="unmute fas fa-microphone-slash"></i>
+      <span>Unmute</span>
+    `
+    document.querySelector('.main__mute_button').innerHTML = html;
+  }
+  
+  const setStopVideo = () => {
+    const html = `
+      <i class="fas fa-video"></i>
+      <span>Stop Video</span>
+    `
+    document.querySelector('.main__video_button').innerHTML = html;
+  }
+  
+  const setPlayVideo = () => {
+    const html = `
+    <i class="stop fas fa-video-slash"></i>
+      <span>Play Video</span>
+    `
+    document.querySelector('.main__video_button').innerHTML = html;
+  }
+  body{
+    margin: 0;
+    padding: 0;
+    font-size: x-large;
+    
+}
+#video-grid
+{
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(4, 500px);
+    padding: 2%;
+    /*justify-content: left;
+    flex-basis: auto;
+    flex-direction: row;
+    grid-template-columns: repeat(auto-fit,minmax(300px,2fr));
+   */
+
+}
+video{
+    height: 85%;
+    width: 85%;
+    object-fit: cover;/*The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
+    object-fit: cover;, so when we resize the browser window, the aspect ratio of the images is preserved*/
+    
+}
+.main{
+    height: 100vh;
+    display: flex;
+    
+}
+
+
+.main_header{
+    color: white;
+    text-align: center;
+}
+.main_chat_window {
+    flex-grow: 1;
+    overflow-y: auto;
+    
+}
+
+.message{
+    color: white;
+    list-style: none;
+}
+
+.main_message_container {
+    padding-bottom:8%;
+    display: flex;
+    border:none;
+    width: 75%;
+    height: 5%;
+}
+
+.main_message_container input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    font-size: x-large;
+    color: #F5F5F5;
+    
+}
+.main_right{
+    flex: 0.2;
+    padding-left: 1%;
+    display: flex;
+    flex-direction: column;
+    background-color: #242324;
+    border-left: 1px solid #3d3d42;
+    
+    
+}
+
+.main_left{
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    
+}
+.main_video{
+    flex-grow: 1;
+    background-color: black;
+    display: flex;
+   /* justify-content: center;*/
+    align-items: center;
+}
+
+.main_controls {
+    color: #D2D2D2;
+    display: flex;
+    justify-content: space-between;
+    padding: 1%;
+    background-color: #1C1E20;
+}
+
+.main__controls__block {
+    display: flex;
+}
+
+.main__controls__button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    min-width: 80px;
+    cursor: pointer;
+}
+
+.main__controls__button:hover {
+    background-color: #343434;
+    border-radius: 5px;
+}
+
+.main__controls__button i {
+    font-size: 24px;
+}
+
+.leave_meeting {
+    color: #EB534B;
+}
+
+.unmute, .stop {
+    color: #CC3B33;
+}
+video {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+  }
+.video__name{
+    color: white;
+}
+/*@media screen and (max-height:850px) {
+    html{
+        padding: 0;
+        margin: 0;
+        min-height: 200%;
+    }
+    body{
+        min-height: 150%;
+    }
+    .main {
+        min-height: 400%;
+        
+        margin: 0;
+        
+      }
+  }*/
+
+  .video__item {
+    position: relative;
+  }
+  
+  .video__name {
+    z-index: 2;
+    left: 16px;
+    bottom: 20.5px;
+    color: white;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  
+
+
+
+  /*body{
+    margin: 0;
+    padding: 0;
+    font-size: x-large;
+    
+}*/
+/*
+#video-grid
+{
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(4, 500px);
+    padding: 2%;
+    justify-content: left;
+    flex-basis: auto;
+    flex-direction: row;
+    grid-template-columns: repeat(auto-fit,minmax(300px,2fr));
+   
+
+}*/
+video{
+    height: 85%;
+    width: 85%;
+    object-fit: cover;/*The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
+    object-fit: cover;, so when we resize the browser window, the aspect ratio of the images is preserved*/
+    
+}
+.main{
+    height: 100vh;
+    display: flex;
+    
+}
+
+
+.main_header{
+    color: white;
+    text-align: center;
+}
+.main_chat_window {
+    flex-grow: 1;
+    overflow-y: auto;
+    
+}
+
+.message{
+    color: white;
+    list-style: none;
+    word-wrap: break-word;
+    word-break: break-word;
+    margin-right: 3.5%;
+}
+
+.main_message_container {
+    padding-bottom:8%;
+    display: flex;
+    border:none;
+    width: 75%;
+    height: 5%;
+}
+
+.main_message_container input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    font-size: x-large;
+    color: #F5F5F5;
+    
+}
+.main_right{
+    flex: 0.2;
+    padding-left: 1%;
+    display: flex;
+    flex-direction: column;
+    background-color: #242324;
+    border-left: 1px solid #3d3d42;
+}
+
+.main_left{
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    
+}
+.main_video{
+    flex-grow: 1;
+    background-color: black;
+    display: flex;
+   /* justify-content: center;*/
+    align-items: center;
+}
+
+.main_controls {
+    color: #D2D2D2;
+    display: flex;
+    justify-content: space-between;
+    padding: 1%;
+    background-color: #1C1E20;
+}
+
+.main__controls__block {
+    display: flex;
+}
+
+.main__controls__button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    min-width: 80px;
+    cursor: pointer;
+}
+
+.main__controls__button:hover {
+    background-color: #343434;
+    border-radius: 5px;
+}
+
+.main__controls__button i {
+    font-size: 24px;
+}
+
+.leave_meeting {
+    color: #EB534B;
+}
+
+.unmute, .stop {
+    color: #CC3B33;
+}
+video {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+  }
+.video__name{
+    color: white;
+}
+/*@media screen and (max-height:850px) {
+    html{
+        padding: 0;
+        margin: 0;
+        min-height: 200%;
+    }
+    body{
+        min-height: 150%;
+    }
+    .main {
+        min-height: 400%;
+        
+        margin: 0;
+        
+      }
+  }*/
+
+  .video__item {
+    position: relative;
+  }
+  
+  .video__name {
+    z-index: 2;
+    left: 16px;
+    bottom: 20.5px;
+    color: white;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  

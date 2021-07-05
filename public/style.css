@@ -1,0 +1,152 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-size: x-large;
+    background-color: black ;
+}
+.main {
+    height: 100vh;
+    display: flex;
+}
+
+.main_left {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+}
+#video-grid
+{
+    display: flex;
+   /* flex-wrap: wrap;*/
+    padding: 2%;
+    justify-content: left;
+    flex-basis: auto;
+    flex-direction: row;
+
+}
+video{
+    height: 85%;
+    width: 85%;
+    object-fit: cover;/*The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
+    object-fit: cover;, so when we resize the browser window, the aspect ratio of the images is preserved*/
+    
+}
+
+.main_video{
+    flex-grow: 1;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.main_controls {
+    background-color: #1C1E20;
+}
+
+
+.main_controls {
+    color: #D2D2D2;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.main__controls__block {
+    display: flex;
+}
+
+.main__controls__button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    min-width: 80px;
+    cursor: pointer;
+}
+
+.main__controls__button:hover {
+    background-color: #343434;
+    border-radius: 5px;
+}
+
+.main__controls__button i {
+    font-size: 24px;
+}
+
+.main_right {
+    display: flex;
+    flex-direction: column;
+    flex: 0.2;
+    background-color: #242324;
+    border-left: 1px solid #3D3D42;
+}
+
+.main_header {
+    padding-top: 5px;
+    color: #F5F5F5;
+    text-align: center;
+    
+}
+
+.main_chat_window {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.message{
+    color: white;
+    list-style: none;
+    word-wrap: break-word;
+    word-break: break-word;
+    margin-right: 3.5%;
+}
+
+.main_message_container {
+    padding-bottom:5%;
+    display: flex;
+    border:none;
+    width: 75%;
+    height: 5%;
+}
+
+.main_message_container input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: #F5F5F5;
+    font-size: x-large;
+}
+
+.leave_meeting {
+    color: #EB534B;
+}
+
+.unmute, .stop {
+    color: #CC3B33;
+}
+
+/*video {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+  }*/
+  .video__name {
+    z-index: 2;
+    color: white;
+    font-size: 150%;
+    padding: 4px 8px;
+    border-radius: 4px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  #myDIV{
+      display: none;
+    z-index: 2;
+    font-size: 150%;
+    padding: 4px 8px;
+    border-radius: 4px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.6);
+  }
