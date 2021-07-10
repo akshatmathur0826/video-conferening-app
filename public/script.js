@@ -36,6 +36,8 @@ if(myName!=""){
     }).then((stream) => {
         //addClickListeners(stream);
         myVideoStream=stream;
+        myVideoStream.getAudioTracks()[0].enabled = false;
+        myVideoStream.getVideoTracks()[0].enabled = false;
         addVideoStream(video, stream, id, myName);
 
         peer.on("call", (call) => {
@@ -66,7 +68,7 @@ if(myName!=""){
           hours %= 12;
           hours = hours ? hours : 12;
           minutes = minutes < 10 ? "0" + minutes : minutes;
-          $("ul").append(`<span class="messageHeader"><small>${name} has joined the meeting at ${hours}:${minutes}${format}</small></span><br><br>`);
+          $("ul").append(`<span class="messageHeader" style="color:blue"><small>${name} has joined the meeting at ${hours}:${minutes}${format}</small></span><br><br>`);
           console.log(name);
           connectToNewUser({ id, name }, stream)
           }, 1000)
@@ -96,10 +98,10 @@ if(myName!=""){
           const container= document.querySelector(".main_chat_window");
           const list = document.createElement("li");
           list.innerHTML = `
-          <div class="message__content" style="font-weight:bold; font-size: xx-large;">
-          ${name} <span style="disply:inline;font-size:medium">${hours}:${minutes}${format}</span>
+          <div class="message__content" style="font-weight:bold;">
+          ${name} <span class="message__time"style="disply:inline;">${hours}:${minutes}${format}</span>
           </div>
-          <div cl ass="message__text"><span style="color:white;font-weight:normal; font-size: x-large;">${message}<br><br></span></div>
+          <div cl ass="message__text"><span style="color:white;font-weight:normal;">${message}<br><br></span></div>
           `
           lists.append(list);
           container.scrollTop = container.scrollHeight;
@@ -114,7 +116,7 @@ if(myName!=""){
           hours %= 12;
           hours = hours ? hours : 12;
           minutes = minutes < 10 ? "0" + minutes : minutes;
-          $("ul").append(`<span class="messageHeader"><small>${name} has left the meeting at ${hours}:${minutes}${format}</small></span><br><br>`);
+          $("ul").append(`<span class="messageHeader" style="color:red"><small>${name} has left the meeting at ${hours}:${minutes}${format}</small></span><br><br>`);
           const video = document.getElementById(id);
             if (video) {
                 video.parentElement.remove();
