@@ -1,11 +1,13 @@
-body{
+html,body{
     margin: 0;
     padding: 0;
-    font-size: x-large;
-    background-color: black ;
+    font-size: medium;
+    background-color: white ;
+    background-size: cover;
+    height: 100%;
 }
 .main {
-    height: 100vh;
+    height: 100%;
     display: flex;
 }
 
@@ -22,11 +24,11 @@ body{
     justify-content: flex-start;
     flex-basis: auto;
     flex-direction: row;
-
+   
 }
 video{
-    height: 85%;
-    width: 85%;
+    height: 40vh;
+    width: 95%;
     object-fit: cover;/*The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
     object-fit: cover;, so when we resize the browser window, the aspect ratio of the images is preserved*/
     
@@ -62,7 +64,8 @@ video{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 8px 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     min-width: 80px;
     cursor: pointer;
 }
@@ -73,7 +76,7 @@ video{
 }
 
 .main__controls__button i {
-    font-size: 24px;
+    font-size: 12px;
 }
 
 .main_right {
@@ -101,7 +104,7 @@ video{
     list-style: none;
     word-wrap: break-word;
     word-break: break-word;
-    margin-right: 3.5%;
+    margin-right: 7.5%;
 }
 
 .main_message_container {
@@ -117,9 +120,11 @@ video{
     background-color: transparent;
     border: none;
     color: #F5F5F5;
-    font-size: x-large;
+    font-size: small;
 }
-
+.message__content{
+    font-size: smaller;
+}
 .leave_meeting {
     color: #EB534B;
 }
@@ -135,14 +140,19 @@ video{
   .video__name {
     z-index: 2;
     color: white;
-    font-size: 150%;
-    padding: 4px 8px;
+    font-size: 100%;
+    /*padding: 4px 8px;*/
     border-radius: 4px;
     position: relative;
+    
     background: rgba(0, 0, 0, 0.6);
   }
+  .video__item{
+     
+      width: 50%;
+  }
   #myDIV{
-      display: none;
+    visibility: hidden;
     z-index: 2;
     font-size: 150%;
     padding: 4px 8px;
@@ -150,3 +160,136 @@ video{
     position: relative;
     background: rgba(0, 0, 0, 0.6);
   }
+
+
+  @media screen and (max-width: 500px) and (min-width:300px) {
+    
+    html,body{
+        background-color: black;
+        height: 100%;
+    }
+    .main {
+      height: 200%;
+
+    }
+    video{
+        height: 105%;
+        width: 170%;
+        object-fit: cover;/*The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
+        object-fit: cover;, so when we resize the browser window, the aspect ratio of the images is preserved*/
+        margin-top: 5%;
+    }
+    .message{
+        color: white;
+        list-style: none;
+        word-wrap: break-word;
+        word-break: break-word;
+        margin-right: 7.5%;
+        margin-left: -3.5%;
+    }
+    .message__content{
+        font-size: medium;
+    }
+    #chat_message{
+        font-size: large;
+    }
+    #video-grid
+{
+    display: grid;
+  /* flex-wrap: wrap;
+    padding: 2%;
+    justify-content: flex-start;
+    flex-basis: auto;
+    flex-direction: row;
+   */
+   grid-template-columns: repeat(2, 230px);
+   grid-row-gap: 50px;
+}
+    
+  }
+ 
+  @media screen and (max-width: 550px) and (min-width:501px) {
+    
+    html,body{
+        background-color: black;
+        height: 100%;
+    }
+    .main {
+      height: 135%;
+
+    }
+    video{
+        height: 100%;
+        width: 180%;
+        object-fit: cover;/*The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
+        object-fit: cover;, so when we resize the browser window, the aspect ratio of the images is preserved*/
+        margin-top: 5%;
+    }
+    .message{
+        color: white;
+        list-style: none;
+        word-wrap: break-word;
+        word-break: break-word;
+        margin-right: 7.5%;
+        margin-left: -3.5%;
+    }
+    .message__content{
+        font-size: medium;
+    }
+    #chat_message{
+        font-size: large;
+    }
+    #video-grid
+    {
+        display: grid;
+       grid-template-columns: repeat(2, 230px);
+       grid-row-gap: 50px;
+    }
+    
+  }
+  @media screen and (max-width: 299px) and (min-width:200px) {
+    
+    html,body{
+        background-color: black;
+        height: 100%;
+    }
+    .main {
+      height: 263%;
+
+    }
+    video{
+        height: 105%;
+        width: 180%;
+        object-fit: cover;/*The CSS object-fit property is used to specify how an <img> or <video> should be resized to fit its container.
+        object-fit: cover;, so when we resize the browser window, the aspect ratio of the images is preserved*/
+        margin-top: 5%;
+    }
+    .message{
+        color: white;
+        list-style: none;
+        word-wrap: break-word;
+        word-break: break-word;
+        margin-right: 7.5%;
+        margin-left: -3.5%;
+    }
+    .message__content{
+        font-size: medium;
+    }
+    #chat_message{
+        font-size: large;
+    }
+    #video-grid
+{
+    display: grid;
+  /* flex-wrap: wrap;
+    padding: 2%;
+    justify-content: flex-start;
+    flex-basis: auto;
+    flex-direction: row;
+   */
+   grid-template-columns: repeat(2, 200px);
+   grid-row-gap: 50px;
+}
+    
+  }
+ 
