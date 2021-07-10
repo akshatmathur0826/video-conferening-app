@@ -276,7 +276,7 @@ const muteUnmute = () => {
     const html = `<i class="far fa-hand-paper" style="color:red;"></i>
                   <span>Raised</span>`;
     document.querySelector('.raisedHand').innerHTML = html;
-    x.style.display="block";
+    x.style.visibility="visible";
 
     console.log("change")
    // changeHandLogo();
@@ -287,7 +287,7 @@ const muteUnmute = () => {
       const html = `<i class="far fa-hand-paper" style="color:"white"></i>
                   <span>Hand</span>`;
       document.querySelector('.raisedHand').innerHTML = html;
-      x.style.display="none";
+      x.style.visibility="hidden";
   }
 
 
